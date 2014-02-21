@@ -7,7 +7,7 @@ tests_require = ['plone.app.testing']
 
 setup(name='redomino.appytransforms',
       version=version,
-      description="ODT templating transforms",
+      description="ODT/ODS templating transforms for Plone",
       long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.rst")).read(),
       # Get more strings from
