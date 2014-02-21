@@ -36,3 +36,67 @@ class TestOdtTemplateTransform(unittest.TestCase):
             input_contents = myzip.read('content.xml')
             self.assertTrue('plone_version' in input_contents)
             self.assertTrue('4.3.2-sunny-day-beta' in input_contents)
+
+    def test_transform_list(self):
+        """ We have an input file with a list """
+        portal = self.layer['portal']
+        import os
+        file_contents = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'input1.odt')).read()
+        pt = portal.portal_transforms
+        converter = pt.convertTo(target_mimetype='application/vnd.oasis.opendocument.text.transformed',
+                                 orig=file_contents,
+                                 mimetype='application/vnd.oasis.opendocument.text',
+                                 mapper=dict(elements=['pippo', 'pluto', 'paperino']),
+                                )
+        data = converter.getData()
+        from zipfile import ZipFile
+        from StringIO import StringIO
+        output_file = StringIO(data)
+        with ZipFile(output_file, 'r') as myzip:
+            input_contents = myzip.read('content.xml')
+            self.assertTrue('pippo' in input_contents)
+            self.assertTrue('pluto' in input_contents)
+            self.assertTrue('paperino' in input_contents)
+
+    def test_transform_conditional(self):
+        """ We have an input file with a conditional text (with comments) """
+        portal = self.layer['portal']
+        import os
+        file_contents = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'input2.odt')).read()
+        pt = portal.portal_transforms
+        converter = pt.convertTo(target_mimetype='application/vnd.oasis.opendocument.text.transformed',
+                                 orig=file_contents,
+                                 mimetype='application/vnd.oasis.opendocument.text',
+                                 mapper=dict(R35=5),
+                                )
+        data = converter.getData()
+        from zipfile import ZipFile
+        from StringIO import StringIO
+        output_file = StringIO(data)
+        with ZipFile(output_file, 'r') as myzip:
+            input_contents = myzip.read('content.xml')
+            self.assertTrue('Should appear' in input_contents)
+            self.assertFalse('Should not appear' in input_contents)
+
+#    def test_transform_conditional2(self):
+#        """ We have an input file with a conditional field """
+#        # TODO: it seems that conditional field texts are broken in appy.pod
+#        portal = self.layer['portal']
+#        import os
+#        file_contents = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'input3.odt')).read()
+#        pt = portal.portal_transforms
+#        converter = pt.convertTo(target_mimetype='application/vnd.oasis.opendocument.text.transformed',
+#                                 orig=file_contents,
+#                                 mimetype='application/vnd.oasis.opendocument.text',
+#                                 mapper=dict(name='davide'),
+#                                )
+#        data = converter.getData()
+#        from zipfile import ZipFile
+#        from StringIO import StringIO
+#        output_file = StringIO(data)
+#        with ZipFile(output_file, 'r') as myzip:
+#            input_contents = myzip.read('content.xml')
+#            self.assertTrue('I am davide' in input_contents)
+#            self.assertTrue('I am not giulia' in input_contents)
+#            self.assertFalse('I am not davide' in input_contents)
+#            self.assertFalse('I am giulia' in input_contents)
