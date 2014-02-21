@@ -1,10 +1,9 @@
 from tempfile import TemporaryFile
-
-from ooopy.Transformer import Transformer
-from ooopy import Transforms
-from ooopy.OOoPy import OOoPy
+from tempfile import NamedTemporaryFile
 
 from zope.interface import implements
+
+from appy.pod.renderer import Renderer
 
 from Products.PortalTransforms.interfaces import ITransform
 
@@ -36,16 +35,17 @@ class OdtTransform:
         with TemporaryFile() as temp_orig_data:
             temp_orig_data.write(orig)
             temp_orig_data.seek(0)
-            with TemporaryFile() as temp_output_data:
-                ooo = OOoPy(infile=temp_orig_data, outfile=temp_output_data)
-                ooo_mimetype = ooo.mimetype
-        
-                ttt = Transformer(ooo_mimetype,
-                                  Transforms.Field_Replace(replace=kwargs.get('mapper', {})),
-                                 )
-                ttt.transform(ooo)
-                ooo.close()
-                temp_output_data.seek(0)
+            # appy requires a result path file with .odt extension...
+            # the result path should not exists and the overwriteExisting 
+            # does not works as (I) expected, so here it is this horrible
+            # workaround to get a valid file name temporary path
+            # See how things should work: 
+            # https://github.com/redomino/redomino.odttransforms/blob/master/redomino/odttransforms/transforms/odt_transforms.py
+            with NamedTemporaryFile(suffix='.odt') as temp_output_data:
+                output_path = temp_output_data.name
+            renderer = Renderer(temp_orig_data, kwargs.get('mapper', {}), output_path)
+            renderer.run()
+            with open(output_path, 'rb') as temp_output_data:
                 transformed_value = temp_output_data.read()
 
                 data.setData(transformed_value)
