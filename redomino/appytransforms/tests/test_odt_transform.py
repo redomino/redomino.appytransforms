@@ -95,7 +95,6 @@ class TestOdtTemplateTransform(unittest.TestCase):
         output_file = StringIO(data)
         with ZipFile(output_file, 'r') as myzip:
             input_contents = myzip.read('content.xml')
-            import pdb; pdb.set_trace()
             self.assertTrue('I am davide' in input_contents)
             self.assertTrue('I am not coccorino, I am davide' in input_contents)
             self.assertFalse('I am not davide, I am coccoino' in input_contents)
