@@ -28,7 +28,8 @@ Example::
 appy.pod's tips and limitations
 -------------------------------
 
-Tips and appy.pod's limitations:
+Tips and appy.pod's limitations::
+
 * conditional text fields seems to be not supported (as far as I can see), use comments with do text if expr instead
 * libreoffice does not support comments on single words (see http://ask.libreoffice.org/en/question/5256/comments-in-writer/), so it seems that you'll have to the only way to 
 * repeating list items, it does not works as expected
