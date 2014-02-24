@@ -5,6 +5,9 @@ from Products.PortalTransforms.interfaces import IPortalTransformsTool
 
 from redomino.appytransforms.transforms import initialize
 from redomino.appytransforms.mimetype import OdtTextTransformed
+from redomino.appytransforms.mimetype import OdsTextTransformed
+from redomino.appytransforms.config import TRANSFORMED_MIMETYPES
+from redomino.appytransforms.config import TRANSFORM_IDS
 
 
 class SetupVarious:
@@ -30,7 +33,9 @@ class SetupVarious:
 
     def setup_mimetype_registry(self, site):
         mimetypes_registry = getUtility(IMimetypesRegistryTool)
-        mimetypes_registry.register(OdtTextTransformed())
+        mimetypes = (OdtTextTransformed(), OdsTextTransformed())
+        for mimetype in mimetypes:
+            mimetypes_registry.register(mimetype)
 
     def setup_transforms(self, site):
         portal_transforms = getUtility(IPortalTransformsTool)
@@ -59,16 +64,16 @@ class Uninstall:
 
     def uninstall_mimetype(self, site):
         mimetypes_registry = getUtility(IMimetypesRegistryTool)
-        mimetype_instance = mimetypes_registry.lookup('application/vnd.oasis.opendocument.text.transformed')
-        if mimetype_instance:
-            mimetypes_registry.unregister(mimetype_instance[0])
+        for mime in TRANSFORMED_MIMETYPES:
+            mimetype_instance = mimetypes_registry.lookup(mime)
+            if mimetype_instance:
+                mimetypes_registry.unregister(mimetype_instance[0])
 
     def uninstall_transforms(self, site):
         portal_transforms = getUtility(IPortalTransformsTool)
-        transform = 'odt_transform'
-        if hasattr(portal_transforms, transform):
-            portal_transforms.unregisterTransform(transform)
-
+        for transform in TRANSFORM_IDS:
+            if hasattr(portal_transforms, transform):
+                portal_transforms.unregisterTransform(transform)
 
 
 def setupVarious(context):

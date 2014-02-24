@@ -1,22 +1,8 @@
-### Register Transforms
-### This is interesting because we don't expect all transforms to be
-### available on all platforms. To do this we allow things to fail at
-### two levels
-### 1) Imports
-###    If the import fails the module is removed from the list and
-###    will not be processed/registered
-### 2) Registration
-###    A second phase happens when the loaded modules register method
-###    is called and this produces an instance that will be used to
-###    implement the transform, if register needs to fail for now it
-###    should raise an ImportError as well (dumb, I know)
-
 from logging import DEBUG, ERROR
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.libtransforms.utils import MissingBinary
-modules = [
-    'odt_transforms',      # odt transforms
-    ]
+
+from redomino.appytransforms.config import TRANSFORM_IDS as modules
 
 g = globals()
 transforms = []

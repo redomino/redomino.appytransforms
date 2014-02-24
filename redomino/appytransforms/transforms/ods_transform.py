@@ -7,20 +7,23 @@ from appy.pod.renderer import Renderer
 
 from Products.PortalTransforms.interfaces import ITransform
 
+from redomino.appytransforms.config import ODS_TRANSFORM_ID
+from redomino.appytransforms.config import TRANSFORMED_SPREADSHEET_MIME
 
-class OdtTransform:
+
+class OdsTransform:
     """
-    Odt templating transform.
+    Ods templating transform.
 
-    Input: odt model
-    Output: rendered odt
+    Input: ods model
+    Output: rendered ods
     """
 
     implements(ITransform)
 
-    __name__ = "odt_transform"
-    inputs = ('application/vnd.oasis.opendocument.text', )
-    output = "application/vnd.oasis.opendocument.text.transformed"
+    __name__ = ODS_TRANSFORM_ID
+    inputs = ('application/vnd.oasis.opendocument.spreadsheet', )
+    output = TRANSFORMED_SPREADSHEET_MIME
 
     def __init__(self, name=None, **kwargs):
         self.conf = kwargs
@@ -35,13 +38,13 @@ class OdtTransform:
         with TemporaryFile() as temp_orig_data:
             temp_orig_data.write(orig)
             temp_orig_data.seek(0)
-            # appy requires a result path file with .odt extension...
+            # appy requires a result path file with .ods extension...
             # the result path should not exists and the overwriteExisting 
             # does not works as (I) expected, so here it is this horrible
             # workaround to get a valid file name temporary path
             # See how things should work: 
             # https://github.com/redomino/redomino.odttransforms/blob/master/redomino/odttransforms/transforms/odt_transforms.py
-            with NamedTemporaryFile(suffix='.odt') as temp_output_data:
+            with NamedTemporaryFile(suffix='.ods') as temp_output_data:
                 output_path = temp_output_data.name
             renderer = Renderer(temp_orig_data, kwargs.get('mapper', {}), output_path)
             renderer.run()
@@ -53,4 +56,4 @@ class OdtTransform:
 
 
 def register():
-    return OdtTransform()
+    return OdsTransform()
