@@ -78,25 +78,25 @@ class TestOdtTemplateTransform(unittest.TestCase):
             self.assertTrue('Should appear' in input_contents)
             self.assertFalse('Should not appear' in input_contents)
 
-#    def test_transform_conditional2(self):
-#        """ We have an input file with a conditional field """
-#        # TODO: it seems that conditional field texts are broken in appy.pod
-#        portal = self.layer['portal']
-#        import os
-#        file_contents = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'input3.odt')).read()
-#        pt = portal.portal_transforms
-#        converter = pt.convertTo(target_mimetype='application/vnd.oasis.opendocument.text.transformed',
-#                                 orig=file_contents,
-#                                 mimetype='application/vnd.oasis.opendocument.text',
-#                                 mapper=dict(name='davide'),
-#                                )
-#        data = converter.getData()
-#        from zipfile import ZipFile
-#        from StringIO import StringIO
-#        output_file = StringIO(data)
-#        with ZipFile(output_file, 'r') as myzip:
-#            input_contents = myzip.read('content.xml')
-#            self.assertTrue('I am davide' in input_contents)
-#            self.assertTrue('I am not giulia' in input_contents)
-#            self.assertFalse('I am not davide' in input_contents)
-#            self.assertFalse('I am giulia' in input_contents)
+    def test_transform_conditional2(self):
+        """ We have an input file with a conditional field """
+        portal = self.layer['portal']
+        import os
+        file_contents = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'input3.odt')).read()
+        pt = portal.portal_transforms
+        converter = pt.convertTo(target_mimetype='application/vnd.oasis.opendocument.text.transformed',
+                                 orig=file_contents,
+                                 mimetype='application/vnd.oasis.opendocument.text',
+                                 mapper=dict(name='davide'),
+                                )
+        data = converter.getData()
+        from zipfile import ZipFile
+        from StringIO import StringIO
+        output_file = StringIO(data)
+        with ZipFile(output_file, 'r') as myzip:
+            input_contents = myzip.read('content.xml')
+            import pdb; pdb.set_trace()
+            self.assertTrue('I am davide' in input_contents)
+            self.assertTrue('I am not coccorino, I am davide' in input_contents)
+            self.assertFalse('I am not davide, I am coccoino' in input_contents)
+            self.assertFalse('I am coccorino' in input_contents)
