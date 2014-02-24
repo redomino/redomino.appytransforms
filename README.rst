@@ -43,7 +43,7 @@ Ods files:
 * repeat rows adding a comment on the first cell with "do row for person in persons" and put dynamic content putting into the cell value ="person['age']"
 * if you want to pass a single variable and displaying it into a single cell use the followind syntax into the cell value ="variable_name" (not as a comment)
 
-If you are in trouble trying to get working ODT templates check out the tests doc https://github.com/redomino/redomino.appytransforms/tree/master/redomino/appytransforms/tests
+appy's documentation is awful: if you are in trouble trying to get working ODT/ODS templates check out the tests doc https://github.com/redomino/redomino.appytransforms/tree/master/redomino/appytransforms/tests
 
 Tests
 -----
